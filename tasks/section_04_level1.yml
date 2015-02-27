@@ -251,9 +251,9 @@
       - section4.4.2
 
   - name: 4.5.1 Install TCP Wrappers (Not Scored)
-    yum: >
-      name=tcp_wrappers
-      state=present
+    action: "{{os_packager}} name={{item}} state=present"
+    with_items:
+      - tcpd
     tags:
       - notscored
       - section4.5

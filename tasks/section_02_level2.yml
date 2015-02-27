@@ -16,9 +16,9 @@
 #
 
   - name: 2.1.11 Remove xinetd (Scored)
-    yum: >
-      name=xinetd
-      state=absent
+    action: "{{os_packager}} name={{item}}"
+    with_items:
+      - xinetd
     tags:
       - scored
       - section2.1

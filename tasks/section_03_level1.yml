@@ -21,6 +21,7 @@
       state=present
       regexp=^umask
       line="umask 027"
+    when: ansible_distribution == "RedHat"
     tags:
       - scored
       - section3.1
@@ -31,14 +32,15 @@
       state=present
       regexp="^id:"
       line="id:3:initdefault:"
+    when: ansible_distribution == "RedHat"
     tags:
       - scored
       - section3.2
 
   - name: 3.2 Remove X Windows (remove package group) (Scored)
-    yum: >
-      name=xorg-x11-server-common
-      state=absent
+    action: "{{os_packager}} name={{item}}"
+    with_items:
+      - xserver-xorg
     tags:
       - scored
       - section3.2
@@ -79,17 +81,17 @@
       - section3.4
 
   - name: 3.5 Remove DHCP Server (Scored)
-    yum: >
-      name=dhcp
-      state=absent
+    action: "{{os_packager}} name={{item}}"
+    with_items:
+      - isc-dhcp-server
     tags:
       - scored
       - section3.5
 
   - name: 3.6 Configure Network Time Protocol (ipv4) (Scored)
-    yum: >
-      pkg=ntp
-      state=installed    
+    action: "{{os_packager}} name={{item}}"
+    with_items:
+      - ntp
     always_run: yes
     tags:
       - scored
@@ -97,7 +99,7 @@
 
   - name: 3.6 Configure Network Time Protocol (ipv4) (Scored)
     service: >
-      name=ntpd
+      name=ntp
       state=started
       enabled=yes
     tags:
@@ -127,18 +129,18 @@
       - section3.6
 
   - name: 3.7 Remove LDAP (Not Scored)
-    yum: >
-      name=openldap-clients
-      state=absent
-    when: not ldap_client
+    action: "{{os_packager}} name={{item}}"
+    with_items:
+      - openldap-clients
+    when: not ldap_client and ansible_distribution == "RedHat"
     tags:
       - notscored
       - section3.7
 
   - name: 3.7 Remove LDAP (Not Scored)
-    yum: >
-      name=openldap-servers
-      state=absent
+    action: "{{os_packager}} name={{item}}"
+    with_items:
+      - slapd
     when: not ldap_server
     tags:
       - notscored
@@ -186,72 +188,72 @@
       - section3.8
 
   - name: 3.9 Remove DNS Server (Not Scored)
-    yum: >
-      name=bind
-      state=absent
+    action: "{{os_packager}} name={{item}}"
+    with_items:
+      - bind9
     when: not dns
     tags:
       - notscored
       - section3.9
 
   - name: 3.10 Remove FTP Server (Not Scored)
-    yum: >
-      name=vsftpd
-      state=absent
+    action: "{{os_packager}} name={{item}}"
+    with_items:
+      - vsftpd
     when: not ftp
     tags:
       - notscored
       - section3.10
 
   - name: 3.11 Remove HTTP Server (Not Scored)
-    yum: >
-      name=httpd
-      state=absent
+    action: "{{os_packager}} name={{item}}"
+    with_items:
+      - apache2
     when: not httpd
     tags:
       - notscored
       - section3.11
 
   - name: 3.12 Remove Dovecot (IMAP and POP3 services) (Not Scored)
-    yum: >
-      name=dovecot
-      state=absent
+    action: "{{os_packager}} name={{item}}"
+    with_items:
+        - dovecot-core
     when: not dovecot
     tags:
       - notscored
       - section3.12
 
   - name: 3.13 Remove Samba (Not Scored)
-    yum: >
-      name=samba
-      state=absent
+    action: "{{os_packager}} name={{item}}"
+    with_items:
+      - samba
     when: not samba
     tags:
       - notscored
       - section3.13
 
   - name: 3.14 Remove HTTP Proxy Server (Not Scored)
-    yum: >
-      name=squid
-      state=absent
+    action: "{{os_packager}} name={{item}}"
+    with_items:
+      - squid
     when: not squid
     tags:
       - notscored
       - section3.14
 
   - name: 3.15 Remove SNMP Server (Not Scored)
-    yum: >
-      name=net-snmp
-      state=absent
+    action: "{{os_packager}} name={{item}}"
+    with_items:
+      - snmpd
     when: not snmp
     tags:
       - notscored
       - section3.15
 
   - name: 3.16 Configure Mail Transfer Agent for Local-Only Mode (Scored)
-    yum: >
-      name=postfix
-      state=present
+    action: "{{os_packager}} name={{item}}"
+    with_items:
+      - postfix
     tags:
       - scored
       - section3.16

@@ -155,6 +155,7 @@
       - section1.2.2
       
   - name: 1.2.3 Verify that gpgcheck is Globally Activated (Scored)
+    when: ansible_distribution == "RedHat"
     lineinfile: >
       state=present
       dest=/etc/yum.conf
@@ -180,7 +181,7 @@
       - section1.2.6
       
   - name: 1.5.1 Get Absolute Path to grub.conf
-    command: readlink -f /etc/grub.conf
+    command: readlink -f {{grub_conf}}
     register: readlink
     changed_when: false
     always_run: yes
@@ -200,7 +201,7 @@
       - section1.5.1
       
   - name: 1.5.2 Get Absolute Path to grub.conf
-    command: readlink -f /etc/grub.conf
+    command: readlink -f {{grub_conf}}
     register: readlink
     changed_when: false
     always_run: yes
@@ -237,6 +238,7 @@
       dest=/etc/sysconfig/init
       regexp=^PROMPT=
       line=PROMPT=no
+    when: ansible_distribution == "RedHat"
     tags:
       - scored
       - section1.5
@@ -269,6 +271,7 @@
       value=1
       state=present
       ignoreerrors=yes
+    when: ansible_distribution == "RedHat"
     tags:
       - scored
       - section1.6
