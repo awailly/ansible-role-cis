@@ -134,7 +134,7 @@
       - section9.1.14
 
   - name: 9.2.1 Ensure Password Fields are Not Empty (Scored)
-    shell: /bin/cat /etc/shadow | /bin/awk -F':' '($2 == "" ) { print $1 " does not have a password "}'
+    shell: cat /etc/shadow | awk -F':' '($2 == "" ) { print $1 " does not have a password "}'
     register: result9_2_1
     changed_when: "result9_2_1.stdout"
     always_run: yes
@@ -144,7 +144,7 @@
       - section9.2.1
 
   - name: 9.2.2 Verify No Legacy "+" Entries Exist in /etc/passwd File (Scored)
-    shell: /bin/grep '^+:' /etc/passwd
+    shell: grep '^+:' /etc/passwd
     register: result9_2_2
     failed_when: result9_2_2.rc == 0
     changed_when: result9_2_2.rc == 0
@@ -156,7 +156,7 @@
       - section9.2.2
 
   - name: 9.2.3 Verify No Legacy "+" Entries Exist in /etc/shadow File (Scored)
-    shell: /bin/grep '^+:' /etc/shadow
+    shell: grep '^+:' /etc/shadow
     register: result9_2_3
     failed_when: result9_2_3.rc == 0
     changed_when: result9_2_3.rc == 0
@@ -168,7 +168,7 @@
       - section9.2.3
 
   - name: 9.2.4 Verify No Legacy "+" Entries Exist in /etc/group File (Scored)
-    shell: /bin/grep '^+:' /etc/group
+    shell: grep '^+:' /etc/group
     register: result9_2_4
     failed_when: result9_2_4.rc == 0
     changed_when: result9_2_4.rc == 0
@@ -180,7 +180,7 @@
       - section9.2.4
 
   - name: 9.2.5 Verify No UID 0 Accounts Exist Other Than root (Scored)
-    shell: /bin/awk -F':' '($3 == 0) { print $1 }' /etc/passwd | grep -qx 'root'
+    shell: awk -F':' '($3 == 0) { print $1 }' /etc/passwd | grep -qx 'root'
     register: result9_2_5
     failed_when: result9_2_5.rc != 0
     changed_when: result9_2_5.rc != 0
@@ -288,7 +288,7 @@
       - section9.2.17
 
   - name: 9.2.18 Check for Presence of User .netrc Files (Scored)
-    shell:  for h in $(/bin/awk -F':' '$7 !~ /\/sbin\/nologin/ && $7 !~ /\/bin\/false/ { print $6 }' /etc/passwd); do if [[ -f $h/.netrc && -s $h/.netrc ]]; then echo $h; fi ; done
+    shell:  for h in $(awk -F':' '$7 !~ /\/sbin\/nologin/ && $7 !~ /\/bin\/false/ { print $6 }' /etc/passwd); do if [[ -f $h/.netrc && -s $h/.netrc ]]; then echo $h; fi ; done
     register: result9_2_18
     changed_when: "result9_2_18.stdout"
     always_run: yes
@@ -299,7 +299,7 @@
       - section9.2.18
 
   - name: 9.2.19 Check for Presence of User .forward Files (Scored)
-    shell:  for h in $(/bin/awk -F':' '$7 !~ /\/sbin\/nologin/ && $7 !~ /\/bin\/false/ { print $6 }' /etc/passwd); do if [[ -f $h/.forward && -s $h/.forward ]]; then echo $h; fi ; done
+    shell:  for h in $(awk -F':' '$7 !~ /\/sbin\/nologin/ && $7 !~ /\/bin\/false/ { print $6 }' /etc/passwd); do if [[ -f $h/.forward && -s $h/.forward ]]; then echo $h; fi ; done
     register: result9_2_19
     changed_when: "result9_2_19.stdout"
     always_run: yes
